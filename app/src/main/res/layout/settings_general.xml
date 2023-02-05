@@ -30,9 +30,17 @@
             android:orientation="horizontal"
             android:paddingBottom="14dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_book"
+                app:tint="@color/subject_blue" />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginHorizontal="8dp"
                 android:layout_weight="1"
                 android:text="Edit Subjects"
@@ -54,9 +62,17 @@
             android:orientation="horizontal"
             android:paddingTop="14dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_table_chart"
+                app:tint="@color/subject_blue" />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginHorizontal="8dp"
                 android:layout_weight="1"
                 android:text="Edit Lesson Lines"

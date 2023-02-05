@@ -25,6 +25,7 @@ class RVAdapterSubjects(
     var enableAddSubject = true
 
     class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val color: View = itemView.findViewById(R.id.color)
         val etSubject: EditText = itemView.findViewById(R.id.etSubject)
         val etRoom: EditText = itemView.findViewById(R.id.etRoom)
         val spinnerColor: Spinner = itemView.findViewById(R.id.spinnerColor)
@@ -55,6 +56,8 @@ class RVAdapterSubjects(
 
         val colorIndex = colors.indexOf(color)
 
+        // TODO: update color as user changes it
+        holder.color.setBackgroundColor(color)
         holder.etSubject.apply {
             setText(name)
             addTextChangedListener(object: TextWatcher {
