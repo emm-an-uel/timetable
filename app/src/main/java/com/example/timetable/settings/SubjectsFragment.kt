@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.timetable.R
 import com.example.timetable.Subject
 import com.example.timetable.ViewModel
@@ -82,31 +84,52 @@ class SubjectsFragment : Fragment() {
         while (n < rvAdapter.itemCount) { // for each itemView in RecyclerView
             val itemView: View = binding.rvSubjects.findViewWithTag(n)
             val name = itemView.findViewById<EditText>(R.id.etSubject).text.toString().trim()
-            val colorIndex = itemView.findViewById<Spinner>(R.id.spinnerColor).selectedItemPosition
-            val color = colors[colorIndex]
-            val room = itemView.findViewById<EditText>(R.id.etRoom).text.toString().trim()
+            if (name != "") { // only save if its name isn't blank
+                val colorIndex = itemView.findViewById<Spinner>(R.id.spinnerColor).selectedItemPosition
+                val color = colors[colorIndex]
+                val room = itemView.findViewById<EditText>(R.id.etRoom).text.toString().trim()
 
-            val subject = Subject(name, color, room)
-            updatedSubjects.add(subject)
+                val subject = Subject(name, color, room)
+                updatedSubjects.add(subject)
+            }
             n++
         }
 
         viewModel.saveSubjects(updatedSubjects)
+        Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
+
+        requireActivity().findNavController(R.id.navHostFragment).navigate(R.id.action_subjectsFragment_to_settingsFragment) // go back to SettingsFragment
     }
 
     private fun setupRV() {
+        if (subjects.size == 0) {
+            subjects.add(Subject("", ContextCompat.getColor(requireContext(), R.color.subject_blue), ""))
+        }
         rvAdapter = RVAdapterSubjects(subjects, colors)
         binding.rvSubjects.adapter = rvAdapter
     }
 
     private fun addNewSubject() {
-        if (rvAdapter.subjects.last().name != "") { // only add new subject if the last subject is not blank
+        if (rvAdapter.enableAddSubject) { // only add new subject if the last subject's name is not blank
             val newSubject = Subject("", ContextCompat.getColor(requireContext(), R.color.subject_blue), "")
             val updatedSubjects = arrayListOf<Subject>()
-            updatedSubjects.apply {
-                addAll(subjects)
-                add(newSubject)
+
+            var n = 0
+            while (n < rvAdapter.itemCount) { // for each itemView in RecyclerView
+                val itemView: View = binding.rvSubjects.findViewWithTag(n)
+                val name = itemView.findViewById<EditText>(R.id.etSubject).text.toString().trim()
+                if (name != "") { // only save if its name isn't blank
+                    val colorIndex = itemView.findViewById<Spinner>(R.id.spinnerColor).selectedItemPosition
+                    val color = colors[colorIndex]
+                    val room = itemView.findViewById<EditText>(R.id.etRoom).text.toString().trim()
+
+                    val subject = Subject(name, color, room)
+                    updatedSubjects.add(subject)
+                }
+                n++
             }
+
+            updatedSubjects.add(newSubject)
             rvAdapter.updateSubjects(updatedSubjects)
         }
     }
