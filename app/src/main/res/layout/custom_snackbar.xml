@@ -11,7 +11,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="12dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:text="Snackbar text"
         android:textColor="@color/white" />
 
@@ -21,7 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.4"
         android:background="@android:color/transparent"
+        android:paddingHorizontal="20dp"
         android:text="button"
+        android:textAlignment="textEnd"
         android:textColor="@color/white" />
 
 </LinearLayout>

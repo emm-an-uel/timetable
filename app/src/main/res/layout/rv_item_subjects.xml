@@ -45,8 +45,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="Room"
                     android:inputType="text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <Spinner
                     android:id="@+id/spinnerColor"

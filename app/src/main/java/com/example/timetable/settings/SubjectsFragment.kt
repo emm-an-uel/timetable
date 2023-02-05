@@ -82,7 +82,7 @@ class SubjectsFragment : Fragment() {
     }
 
     private fun saveSubjects() {
-        val shownSubjects = getShownSubjects()
+        val shownSubjects = getShownSubjects(includeBlanks = false)
         viewModel.saveSubjects(shownSubjects)
         Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
 
@@ -107,7 +107,7 @@ class SubjectsFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val shownSubjects = getShownSubjects()
+                val shownSubjects = getShownSubjects(includeBlanks = true)
                 val pos = viewHolder.adapterPosition
                 val removedSubject: Subject = shownSubjects[pos]
 
@@ -131,7 +131,11 @@ class SubjectsFragment : Fragment() {
         snackBarLayout.addView(customView)
 
         val tvPrimary: TextView = snackBarLayout.findViewById(R.id.tvPrimary)
-        val name = removedSubject.name
+        val name = if (removedSubject.name != "") {
+            removedSubject.name
+        } else {
+            "Subject"
+        }
         tvPrimary.text = "$name removed"
 
         val btnUndo: Button = snackBarLayout.findViewById(R.id.btnAction)
@@ -145,7 +149,7 @@ class SubjectsFragment : Fragment() {
     }
 
     private fun undoDelete(restoredSubject: Subject) {
-        val shownSubjects = getShownSubjects()
+        val shownSubjects = getShownSubjects(includeBlanks = false)
         shownSubjects.add(restoredSubject)
         rvAdapter.updateSubjects(shownSubjects)
     }
@@ -153,19 +157,29 @@ class SubjectsFragment : Fragment() {
     private fun addNewSubject() {
         if (rvAdapter.enableAddSubject) { // only add new subject if the last subject's name is not blank
             val newSubject = Subject("", ContextCompat.getColor(requireContext(), R.color.subject_blue), "")
-            val updatedSubjects = getShownSubjects()
+            val updatedSubjects = getShownSubjects(includeBlanks = false)
             updatedSubjects.add(newSubject)
             rvAdapter.updateSubjects(updatedSubjects)
         }
     }
 
-    private fun getShownSubjects(): ArrayList<Subject> {
+    private fun getShownSubjects(includeBlanks: Boolean): ArrayList<Subject> {
         val shownSubjects = arrayListOf<Subject>()
         for (i in 0 until rvAdapter.itemCount) { // for each itemView in RecyclerView
             val holder = binding.rvSubjects.findViewHolderForAdapterPosition(i)
             if (holder != null) {
                 val name = holder.itemView.findViewById<EditText>(R.id.etSubject).text.toString().trim()
-                if (name != "") { // only save if its name isn't blank
+                if (!includeBlanks) { // if don't include blanks && name is not blank
+                    if (name != "") {
+                        val colorIndex = holder.itemView.findViewById<Spinner>(R.id.spinnerColor).selectedItemPosition
+                        val color = colors[colorIndex]
+                        val room = holder.itemView.findViewById<EditText>(R.id.etRoom).text.toString().trim()
+
+                        val subject = Subject(name, color, room)
+                        shownSubjects.add(subject)
+                    }
+
+                } else { // include blanks
                     val colorIndex = holder.itemView.findViewById<Spinner>(R.id.spinnerColor).selectedItemPosition
                     val color = colors[colorIndex]
                     val room = holder.itemView.findViewById<EditText>(R.id.etRoom).text.toString().trim()
