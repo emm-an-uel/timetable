@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.example.timetable.R
 import com.example.timetable.Subject
 import com.example.timetable.ViewModel
 import com.example.timetable.databinding.FragmentSettingsBinding
@@ -46,11 +48,15 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.generalSettings.editSubjects.setOnClickListener {
-            // TODO: edit subjects
+            openSubjectsSettings()
         }
 
         binding.generalSettings.editLessonLines.setOnClickListener {
             // TODO: edit lesson lines
         }
+    }
+
+    private fun openSubjectsSettings() {
+        requireActivity().findNavController(R.id.navHostFragment).navigate(R.id.action_settingsFragment_to_subjectsFragment)
     }
 }

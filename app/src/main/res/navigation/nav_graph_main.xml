@@ -8,20 +8,32 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.timetable.settings.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_dayFragment"
             app:destination="@id/dayFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_subjectsFragment"
+            app:destination="@id/subjectsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/dayFragment"
         android:name="com.example.timetable.dayView.DayFragment"
-        android:label="fragment_day"
+        android:label="Timetable"
         tools:layout="@layout/fragment_day" >
         <action
             android:id="@+id/action_dayFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subjectsFragment"
+        android:name="com.example.timetable.settings.SubjectsFragment"
+        android:label="Edit Subjects"
+        tools:layout="@layout/fragment_subjects" >
+        <action
+            android:id="@+id/action_subjectsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
 
