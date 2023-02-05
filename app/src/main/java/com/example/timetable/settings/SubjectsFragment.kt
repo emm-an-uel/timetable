@@ -137,19 +137,17 @@ class SubjectsFragment : Fragment() {
         val btnUndo: Button = snackBarLayout.findViewById(R.id.btnAction)
         btnUndo.text = "undo"
         btnUndo.setOnClickListener {
-            cancelDelete(removedSubject)
+            undoDelete(removedSubject)
             snack.dismiss()
         }
 
         snack.show()
     }
 
-    private fun cancelDelete(restoredSubject: Subject) {
-        val updatedSubjects = arrayListOf<Subject>()
-        updatedSubjects.addAll(subjects)
-        updatedSubjects.add(restoredSubject)
-
-        rvAdapter.updateSubjects(updatedSubjects)
+    private fun undoDelete(restoredSubject: Subject) {
+        val shownSubjects = getShownSubjects()
+        shownSubjects.add(restoredSubject)
+        rvAdapter.updateSubjects(shownSubjects)
     }
 
     private fun addNewSubject() {
