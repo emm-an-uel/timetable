@@ -4,27 +4,28 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.timetable.MainActivity
 import com.example.timetable.R
 import com.example.timetable.Subject
 
-class RVAdapter(
+class RVAdapterEditing(
     private val subjects: List<Subject>,
     private val times: List<List<String>>
-) : RecyclerView.Adapter<RVAdapter.NewViewHolder>() {
+) : RecyclerView.Adapter<RVAdapterEditing.NewViewHolder>() {
 
     class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val colorCode: View = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvRoom: TextView = itemView.findViewById(R.id.tvRoom)
-        val tvTime: TextView = itemView.findViewById(R.id.tvTime)
+        val etStartTime: EditText = itemView.findViewById(R.id.etStartTime)
+        val etEndTime: EditText = itemView.findViewById(R.id.etEndTime)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.rv_item, parent, false
+            R.layout.rv_item_editing, parent, false
         )
         return NewViewHolder(itemView)
     }
@@ -34,7 +35,6 @@ class RVAdapter(
     }
 
     override fun onBindViewHolder(holder: NewViewHolder, position: Int) {
-        val context = holder.tvSubject.context
         val subject: Subject = subjects[position]
         val name = subject.name
         val color = subject.color
@@ -46,6 +46,11 @@ class RVAdapter(
         holder.tvSubject.text = name
         holder.colorCode.backgroundTintList = ColorStateList.valueOf(color)
         holder.tvRoom.text = room
-        holder.tvTime.text = (context as MainActivity).getString(R.string.start_end_time, startTime, endTime)
+        if (startTime != "") {
+            holder.etStartTime.setText(startTime)
+        }
+        if (endTime != "") {
+            holder.etEndTime.setText(endTime)
+        }
     }
 }

@@ -12,7 +12,7 @@ import java.io.StringReader
 class ViewModel(private val app: Application) : AndroidViewModel(app) {
 
     var subjects: ArrayList<Subject>? = null
-    var dayTimes: MutableMap<String, List<List<String>>>? = null
+    var dayTimes: MutableMap<Int, ArrayList<ArrayList<String>>>? = null
     var colors: ArrayList<Int>? = null
 
     fun createColors() {
@@ -55,12 +55,16 @@ class ViewModel(private val app: Application) : AndroidViewModel(app) {
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val dayTime = Klaxon().parse<DayTime>(reader)!!
-                        val day: String = dayTime.day
-                        val times: List<List<String>> = dayTime.times
+                        val day: Int = dayTime.day
+                        val times: ArrayList<ArrayList<String>> = dayTime.times
 
                         dayTimes!![day] = times
                     }
                 }
+            }
+        } else { // file doesn't exist
+            for (n in 0 until 5) { // create map with empty lists
+                dayTimes!![n] = arrayListOf()
             }
         }
     }
@@ -89,7 +93,7 @@ class ViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     data class DayTime(
-        val day: String,
-        val times: List<List<String>>
+        val day: Int, // 0 is Monday; 4 is Friday
+        val times: ArrayList<ArrayList<String>>
     )
 }

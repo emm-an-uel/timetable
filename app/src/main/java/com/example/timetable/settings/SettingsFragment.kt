@@ -19,7 +19,7 @@ class SettingsFragment : Fragment() {
 
     private lateinit var viewModel: ViewModel
     private lateinit var subjects: ArrayList<Subject>
-    private lateinit var dayTimes: MutableMap<String, List<List<String>>>
+    private lateinit var dayTimes: MutableMap<Int, ArrayList<ArrayList<String>>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +49,6 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.generalSettings.editSubjects.setOnClickListener {
             openSubjectsSettings()
-        }
-
-        binding.generalSettings.editLessonLines.setOnClickListener {
-            // TODO: edit lesson lines
         }
     }
 

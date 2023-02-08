@@ -37,6 +37,9 @@ android {
 
 dependencies {
 
+    // view pager
+    implementation 'com.google.android.material:material:1.8.0'
+
     // klaxon
     implementation 'com.beust:klaxon:5.5'
 

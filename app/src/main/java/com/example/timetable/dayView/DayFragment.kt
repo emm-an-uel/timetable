@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.timetable.R
 import com.example.timetable.Subject
 import com.example.timetable.ViewModel
@@ -18,10 +18,11 @@ class DayFragment : Fragment() {
     private var _binding: FragmentDayBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var rv: RecyclerView
-    private lateinit var rvAdapter: RVAdapter
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private var editing: Boolean = false
+    private var currentDay: Int = 0 // 0 is Monday; 4 is Friday
     private lateinit var subjects: List<Subject>
-    private lateinit var dayTimes: MutableMap<String, List<List<String>>>
+    private lateinit var dayTimes: MutableMap<Int, ArrayList<ArrayList<String>>>
 
     private lateinit var viewModel: ViewModel
 
@@ -54,6 +55,34 @@ class DayFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupMenu()
+        setupViewPager()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        editing = false
+    }
+
+    private fun setupViewPager() {
+        viewPagerAdapter = ViewPagerAdapter(requireContext(), subjects, dayTimes, editing)
+        binding.viewPager.adapter = viewPagerAdapter
+        binding.viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                // do nothing
+            }
+
+            override fun onPageSelected(position: Int) {
+                currentDay = position
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                // do nothing
+            }
+        })
     }
 
     private fun setupMenu() {
@@ -67,10 +96,31 @@ class DayFragment : Fragment() {
                     R.id.settings -> {
                         openSettings()
                         true
-                    } else -> false
+                    }
+
+                    R.id.edit -> {
+                        if (editing) { // if editing is currently enabled
+                            disableEditing()
+                            menuItem.setIcon(R.drawable.ic_edit)
+                        } else { // if editing is currently disabled
+                            enableEditing()
+                            menuItem.setIcon(R.drawable.ic_edit_off)
+                        }
+                        true
+                    }
+
+                    else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun enableEditing() {
+        editing = true
+    }
+
+    private fun disableEditing() {
+        editing = false
     }
 
     private fun openSettings() {
